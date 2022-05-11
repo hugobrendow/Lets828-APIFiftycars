@@ -25,4 +25,21 @@ public class ClienteResource {
         return ResponseEntity.status(HttpStatus.OK).body(list.toString()); //service.listarClientes().toString()
     }
 
+    @RequestMapping(value = "nomes", method = RequestMethod.GET)
+    public ResponseEntity<List<String>> listarNomesClientes() {
+
+        return ResponseEntity.status(HttpStatus.OK).body(service.listarNomeClientes());
+    }
+
+    @RequestMapping(value = "buscar", method = RequestMethod.GET)
+    public ResponseEntity<Cliente> buscarClientePorNome() {
+
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.buscarClientePorNome("Diego Neri2"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Cliente(null, e.getMessage(), null, null));
+        }
+
+    }
+
 }

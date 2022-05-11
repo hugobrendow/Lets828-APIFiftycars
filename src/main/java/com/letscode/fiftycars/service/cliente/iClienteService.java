@@ -7,4 +7,8 @@ import java.util.List;
 public interface iClienteService {
 
     List<Cliente> listarClientes();
+
+    List<String> listarNomeClientes();
+
+    Cliente buscarClientePorNome(String nome);
 }
