@@ -1,6 +1,8 @@
 package com.letscode.fiftycars.service.cliente;
 
 import com.letscode.fiftycars.domain.cliente.Cliente;
+import com.letscode.fiftycars.dto.cliente.ClientePOST;
+import com.letscode.fiftycars.dto.cliente.ClienteResponseDTO;
 import com.letscode.fiftycars.repository.cliente.ClienteRepository;
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +68,7 @@ public class ClienteService implements iClienteService {
 
         //Checar existencia de valor e determinar uma função para ser executada
         optionalCliente.ifPresent(value -> {
-            System.out.println("[LOG] >> Cliente encontrado.");
+            System.out.println("[LOG] >> Cliente encontrado. " + value);
         });
 
         //Retorna, caso exista, o objeto, senão retorna uma exception (precisa extender a classe Throwable)
@@ -74,6 +76,30 @@ public class ClienteService implements iClienteService {
 
         //Retorna, caso exista, o objeto, senão retorna a instância definida no "orElse"
         //return optionalCliente.orElse(new Cliente(0, "Cliente desconhecido.", LocalDate.of(1900, 01, 01), '?'));
-        
+
     }
+
+    @Override
+    public ClienteResponseDTO buscarClientePorNomeJpaDto(String nome) {
+        //return clienteRepository.findClienteByNomeEquals(nome).get();
+
+        Cliente cli = clienteRepository.findClienteByNomeEquals(nome).get();
+
+        return new ClienteResponseDTO(cli.getNome(), cli.getDataNascimento().toString(), cli.getSexo());
+    }
+
+    @Override
+    public Cliente buscarClientePorNomeJpa(String nome) {
+        return clienteRepository.findClienteByNomeEquals(nome).get();
+    }
+
+    @Override
+    public Cliente cadastrarCliente(ClientePOST cliente) {
+        //Implementa suas regras de negócio
+        Cliente tempCli = new Cliente(null, cliente.getNome(), LocalDate.parse(cliente.getDataNascimento()), cliente.getSexo());
+
+        return clienteRepository.save(tempCli);
+    }
+
+
 }

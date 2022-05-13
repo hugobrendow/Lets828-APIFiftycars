@@ -1,13 +1,13 @@
 package com.letscode.fiftycars.resource.cliente;
 
 import com.letscode.fiftycars.domain.cliente.Cliente;
+import com.letscode.fiftycars.dto.cliente.ClientePOST;
+import com.letscode.fiftycars.dto.cliente.ClienteResponseDTO;
 import com.letscode.fiftycars.service.cliente.iClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,6 +40,25 @@ public class ClienteResource {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Cliente(null, e.getMessage(), null, null));
         }
 
+    }
+
+    //http://localhost:8080/v1/clientes/buscar_jpa_dto?nome=Diego%20Neri&sexo=M
+    @RequestMapping(value = "buscar_jpa_dto", method = RequestMethod.GET)
+    public ResponseEntity<ClienteResponseDTO> buscarClientePorNomeJpaDto(@RequestParam String nome, @RequestParam Character sexo) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.buscarClientePorNomeJpaDto(nome));
+    }
+
+    //http://localhost:8080/v1/clientes/buscar_jpa?nome=Diego%20Neri&sexo=M
+    @RequestMapping(value = "buscar_jpa", method = RequestMethod.GET)
+    public ResponseEntity<Cliente> buscarClientePorNomeJpa(@RequestParam String nome, @RequestParam Character sexo) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.buscarClientePorNomeJpa(nome));
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<Cliente> cadastrarCliente(@RequestBody ClientePOST cliente){
+        Cliente temp = service.cadastrarCliente(cliente);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(temp);
     }
 
 }
