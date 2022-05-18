@@ -2,7 +2,9 @@ package com.letscode.fiftycars.resource.cliente;
 
 import com.letscode.fiftycars.domain.cliente.Cliente;
 import com.letscode.fiftycars.dto.cliente.ClientePOST;
+import com.letscode.fiftycars.dto.cliente.ClientePUT;
 import com.letscode.fiftycars.dto.cliente.ClienteResponseDTO;
+import com.letscode.fiftycars.service.cliente.ClienteService;
 import com.letscode.fiftycars.service.cliente.iClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,7 +39,7 @@ public class ClienteResource {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(service.buscarClientePorNome("Diego Neri2"));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Cliente(null, e.getMessage(), null, null));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Cliente(null, e.getMessage(), null, null, 0));
         }
 
     }
@@ -59,6 +61,24 @@ public class ClienteResource {
         Cliente temp = service.cadastrarCliente(cliente);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(temp);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE)
+    public ResponseEntity<String> excluirCliente(@RequestParam Integer codigo){
+        try {
+            service.excluirCliente(codigo);
+
+            return ResponseEntity.status(HttpStatus.OK).body("OK");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity<Cliente> atualizarCliente(@RequestBody ClientePUT cliente){
+        return ResponseEntity.status(HttpStatus.OK).body(service.atualizarCliente(cliente));
+
     }
 
 }

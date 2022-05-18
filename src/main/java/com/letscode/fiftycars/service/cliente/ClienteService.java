@@ -2,6 +2,7 @@ package com.letscode.fiftycars.service.cliente;
 
 import com.letscode.fiftycars.domain.cliente.Cliente;
 import com.letscode.fiftycars.dto.cliente.ClientePOST;
+import com.letscode.fiftycars.dto.cliente.ClientePUT;
 import com.letscode.fiftycars.dto.cliente.ClienteResponseDTO;
 import com.letscode.fiftycars.repository.cliente.ClienteRepository;
 import org.apache.tomcat.jni.Local;
@@ -96,9 +97,48 @@ public class ClienteService implements iClienteService {
     @Override
     public Cliente cadastrarCliente(ClientePOST cliente) {
         //Implementa suas regras de negócio
-        Cliente tempCli = new Cliente(null, cliente.getNome(), LocalDate.parse(cliente.getDataNascimento()), cliente.getSexo());
+        Cliente tempCli = new Cliente(null, cliente.getNome(), LocalDate.parse(cliente.getDataNascimento()), cliente.getSexo(), 0);
 
         return clienteRepository.save(tempCli);
+    }
+
+    @Override
+    public void excluirCliente(Integer codigo) {
+        //Opção 0
+        clienteRepository.deleteById(codigo);
+
+        //Opção 1
+        clienteRepository.findById(codigo).ifPresent(
+                x -> clienteRepository.deleteById(x.getCodigo())
+        );
+
+        //Opção 2
+        clienteRepository.findById(codigo).orElseThrow(
+                () -> new RuntimeException("Cliente não encontrado")
+        );
+
+        clienteRepository.deleteById(codigo);
+    }
+
+    @Override
+    public Cliente atualizarCliente(ClientePUT cliente) {
+
+        return clienteRepository.save(
+                new Cliente(cliente.getCodigo(),
+                        cliente.getNome(),
+                        LocalDate.parse(cliente.getDataNascimento()),
+                        cliente.getSexo(),
+                        0));
+        //TODO: Bug na quantidade visitas, em todo o update vai voltar pra zero.
+    }
+
+    @Override
+    public void registrarVisitaCliente(Integer codigo) {
+        Cliente tempCliente = clienteRepository.findById(codigo).get();
+        //tempCliente++;
+        tempCliente.setQuantidadeVisitas(tempCliente.getQuantidadeVisitas() + 1);
+
+        clienteRepository.save(tempCliente);
     }
 
 

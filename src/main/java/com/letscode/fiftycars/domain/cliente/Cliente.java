@@ -29,15 +29,19 @@ public class Cliente {
     @NotNull(message = "Por favor, informe o sexo.")
     private Character sexo;
 
+    @Column(name = "QTD_VST", nullable = false)
+    private Integer quantidadeVisitas;
+
 
     //Construtores
     public Cliente(){}
 
-    public Cliente(Integer codigo, String nome, LocalDate dataNascimento, Character sexo) {
+    public Cliente(Integer codigo, String nome, LocalDate dataNascimento, Character sexo, Integer quantidadeVisitas) {
         this.codigo = codigo;
         this.nome = nome;
         this.dataNascimento = dataNascimento;
         this.sexo = sexo;
+        this.quantidadeVisitas = quantidadeVisitas;
     }
 
     //Getters e Setters
@@ -71,6 +75,14 @@ public class Cliente {
 
     public void setSexo(Character sexo) {
         this.sexo = sexo;
+    }
+
+    public Integer getQuantidadeVisitas() {
+        return quantidadeVisitas;
+    }
+
+    public void setQuantidadeVisitas(Integer quantidadeVisitas) {
+        this.quantidadeVisitas = quantidadeVisitas;
     }
 
     @Override
