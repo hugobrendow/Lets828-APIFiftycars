@@ -38,4 +38,23 @@ public class LocadoraResource {
     public ResponseEntity<List<String>> listarClientesDistinct() {
         return ResponseEntity.status(HttpStatus.OK).body(service.listarClientesDistinct());
     }
+
+    @RequestMapping(value = "clientes/classificar", method = RequestMethod.GET)
+    public ResponseEntity<List<Cliente>> classificarClientes() {
+        return ResponseEntity.status(HttpStatus.OK).body(service.classificarClientes());
+    }
+
+    @RequestMapping(value = "alugar", method = RequestMethod.GET)
+    public ResponseEntity alugarCarroThread() {
+        service.alugarCarroThread(new Cliente(1, "Thread 1", null, null, 0));
+
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+    @RequestMapping(value = "alugar_async", method = RequestMethod.GET)
+    public ResponseEntity alugarCarroAsync() {
+        service.alugarCarroAsync(new Cliente(1, "Thread 1", null, null, 0));
+
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
 }

@@ -14,4 +14,10 @@ public interface iLocadoraService {
     List<ClienteResponseDTO> listarMelhoresClientesDto();
 
     List<String> listarClientesDistinct();
+
+    List<Cliente> classificarClientes();
+
+    void alugarCarroThread(Cliente cliente);
+
+    void alugarCarroAsync(Cliente cliente);
 }
