@@ -9,9 +9,14 @@ import com.letscode.fiftycars.service.cliente.iClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
+
 
 @RestController
 @RequestMapping(value = "v1/clientes")
@@ -39,6 +44,11 @@ public class ClienteResource {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(service.buscarClientePorNome("Diego Neri2"));
         } catch (RuntimeException e) {
+            /*return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Cliente.builder()
+                    .nome("Diego")
+                    .dataNascimento(LocalDate.now())
+                    .quantidadeVisitas(0)
+                    .build());*/
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Cliente(null, e.getMessage(), null, null, 0));
         }
 
@@ -57,7 +67,7 @@ public class ClienteResource {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Cliente> cadastrarCliente(@RequestBody ClientePOST cliente){
+    public ResponseEntity<Cliente> cadastrarCliente(@Valid @RequestBody ClientePOST cliente){
         Cliente temp = service.cadastrarCliente(cliente);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(temp);

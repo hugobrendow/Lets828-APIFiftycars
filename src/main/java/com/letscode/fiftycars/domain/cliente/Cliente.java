@@ -2,11 +2,18 @@ package com.letscode.fiftycars.domain.cliente;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
+/*@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Builder*/
 @Table(name = "TB_CLIENTES")
 @Entity
 public class Cliente {
