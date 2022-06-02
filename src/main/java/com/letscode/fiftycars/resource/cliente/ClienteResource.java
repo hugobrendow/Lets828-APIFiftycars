@@ -19,6 +19,7 @@ import java.util.List;
 
 
 @RestController
+@CrossOrigin
 @RequestMapping(value = "v1/clientes")
 public class ClienteResource {
 
@@ -30,6 +31,11 @@ public class ClienteResource {
         List<Cliente> list = service.listarClientes();
 
         return ResponseEntity.status(HttpStatus.OK).body(list.toString()); //service.listarClientes().toString()
+    }
+
+    @RequestMapping(value = "json", method = RequestMethod.GET)
+    public ResponseEntity<List<Cliente>> listarClientesJson() {
+        return ResponseEntity.status(HttpStatus.OK).body(service.listarClientes());
     }
 
     @RequestMapping(value = "nomes", method = RequestMethod.GET)
