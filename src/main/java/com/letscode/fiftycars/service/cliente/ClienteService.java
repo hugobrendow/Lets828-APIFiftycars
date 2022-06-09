@@ -49,7 +49,11 @@ public class ClienteService implements iClienteService {
 
     @Override
     public List<String> listarNomeClientes() {
-        return clienteRepository.findAll().stream()
+        List<Cliente> clientes = clienteRepository.findAll();
+        if (clientes == null || clientes.isEmpty()) {
+            throw new IllegalArgumentException("teste");
+        }
+        return clientes.stream()
                 .map(x -> x.getNome().toUpperCase())
                 .collect(Collectors.toList());
     }
@@ -83,8 +87,8 @@ public class ClienteService implements iClienteService {
     @Override
     public ClienteResponseDTO buscarClientePorNomeJpaDto(String nome) {
         //return clienteRepository.findClienteByNomeEquals(nome).get();
-
-        Cliente cli = clienteRepository.findClienteByNomeEquals(nome).get();
+        Cliente cli = clienteRepository.findClienteByNomeEquals(nome)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
         return new ClienteResponseDTO(cli.getNome(), cli.getDataNascimento().toString(), cli.getSexo());
     }
@@ -99,18 +103,28 @@ public class ClienteService implements iClienteService {
         //Implementa suas regras de negócio
         Cliente tempCli = new Cliente(null, cliente.getNome(), LocalDate.parse(cliente.getDataNascimento()), cliente.getSexo(), 0);
 
+        if (LocalDate.now().getYear() - LocalDate.parse(cliente.getDataNascimento()).getYear() < 18) {
+            throw new IllegalArgumentException("O cliente precisa ter mais do que 18 anos!");
+        }
+
+        if (LocalDate.now().getYear() - LocalDate.parse(cliente.getDataNascimento()).getYear() > 121) {
+            throw new IllegalArgumentException("Esta pessoa deve entrar no guiness");
+        }
+
+        // MOCK
+
         return clienteRepository.save(tempCli);
     }
 
     @Override
     public void excluirCliente(Integer codigo) {
         //Opção 0
-        clienteRepository.deleteById(codigo);
-
-        //Opção 1
-        clienteRepository.findById(codigo).ifPresent(
-                x -> clienteRepository.deleteById(x.getCodigo())
-        );
+//        clienteRepository.deleteById(codigo);
+//
+//        //Opção 1
+//        clienteRepository.findById(codigo).ifPresent(
+//                x -> clienteRepository.deleteById(x.getCodigo())
+//        );
 
         //Opção 2
         clienteRepository.findById(codigo).orElseThrow(
@@ -122,6 +136,14 @@ public class ClienteService implements iClienteService {
 
     @Override
     public Cliente atualizarCliente(ClientePUT cliente) {
+
+        if (LocalDate.now().getYear() - LocalDate.parse(cliente.getDataNascimento()).getYear() < 18) {
+            throw new IllegalArgumentException("O cliente precisa ter mais do que 18 anos!");
+        }
+
+        if (LocalDate.now().getYear() - LocalDate.parse(cliente.getDataNascimento()).getYear() > 121) {
+            throw new IllegalArgumentException("Esta pessoa deve entrar no guiness");
+        }
 
         return clienteRepository.save(
                 new Cliente(cliente.getCodigo(),

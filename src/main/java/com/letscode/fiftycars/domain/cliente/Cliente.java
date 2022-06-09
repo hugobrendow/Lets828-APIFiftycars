@@ -1,10 +1,10 @@
 package com.letscode.fiftycars.domain.cliente;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -30,6 +30,8 @@ public class Cliente {
     @Column(name = "DAT_NASC_CLI", nullable = false)
     @NotNull(message = "Por favor, informe a data de nascimento.")
     @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate dataNascimento;
 
     @Column(name = "SEX_CLI", nullable = false)
